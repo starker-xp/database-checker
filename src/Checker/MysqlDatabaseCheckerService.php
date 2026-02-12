@@ -138,7 +138,7 @@ class MysqlDatabaseCheckerService
         foreach ($indexes as $index) {
             try {
                 $newIndex = $this->getIndex($index, $newIndexes);
-                $modificationsIndexBetweenTable[$newColumn->getName()] = $this->checkIndex($index, $newIndex);
+                $modificationsIndexBetweenTable[$newIndex->getName()] = $this->checkIndex($index, $newIndex);
             } catch (IndexNotExistException $e) {
                 if ($this->dropStatement) {
                     $modificationsIndexRemoveBetweenTable[$index->getName()] = $index->deleteStatement();
@@ -288,12 +288,11 @@ class MysqlDatabaseCheckerService
 
     private function indexIsEquals(MysqlDatabaseIndex $index, MysqlDatabaseIndex $newIndex): bool
     {
-        // Column is equals no need more check
-        if ($column == $newColumn) {
+        if ($index == $newIndex) {
             return true;
         }
 
-        return strtolower(json_encode($column->toArray())) == strtolower(json_encode($newColumn->toArray()));
+        return strtolower(json_encode($index->toArray())) == strtolower(json_encode($newIndex->toArray()));
     }
 
     /**
